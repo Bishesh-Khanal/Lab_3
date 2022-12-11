@@ -1,4 +1,5 @@
 #include <iostream>
+#include <cmath>
 
 using namespace std;
 
@@ -19,18 +20,18 @@ class Real{
 
 class Imaginary{
     protected:
-        int number;
+        int imaginaryNumber;
         char character;
     public:
         Imaginary(){}
 
-        Imaginary( int number, char character){
-            setNumber(number);
+        Imaginary( int imaginaryNumber, char character){
+            setNumber(imaginaryNumber);
             setCharacter(character);
         }
 
-        void setNumber(int number){
-            this->number = number;
+        void setNumber(int imaginaryNumber){
+            this->imaginaryNumber = imaginaryNumber;
         }
 
         void setCharacter(char character){
@@ -48,11 +49,11 @@ class Imaginary{
 class Complex: public Imaginary, public Real{
     public:
         Complex(): Real(), Imaginary(){}
-        Complex(int real, int number, char character): Real(real), Imaginary(number, character){}
+        Complex(int real, int imaginaryNumber, char character): Real(real), Imaginary(imaginaryNumber, character){}
 
         void operator-(){
             this->real *= -1;
-            this->number *= -1;
+            this->imaginaryNumber *= -1;
         }
 
         friend Complex operator*(Complex&, int);
@@ -64,7 +65,7 @@ class Complex: public Imaginary, public Real{
         void operator+=(Complex& complex2){
             if( this->character == complex2.character ){
                 this->setReal(this->real + complex2.real);
-                this->setNumber(this->number + complex2.number);
+                this->setNumber(this->imaginaryNumber + complex2.imaginaryNumber);
                 this->setCharacter(this->character);
             } else{
                 throw "Dissimilar imaginary characters!";
@@ -72,7 +73,7 @@ class Complex: public Imaginary, public Real{
         }
 
         bool operator==(const Complex& complex)const{
-            if(this->character == complex.character && this->real == complex.real && this->number == complex.number){
+            if(this->character == complex.character && this->real == complex.real && this->imaginaryNumber == complex.imaginaryNumber){
                 return true;
             } else{
                 return false;
@@ -80,7 +81,7 @@ class Complex: public Imaginary, public Real{
         }
 
         bool operator!=(const Complex& complex)const{
-            if(this->character != complex.character || this->real != complex.real || this->number != complex.number){
+            if(this->character != complex.character || this->real != complex.real || this->imaginaryNumber != complex.imaginaryNumber){
                 return true;
             } else{
                 return false;
@@ -88,21 +89,17 @@ class Complex: public Imaginary, public Real{
         }
 
         bool operator>(const Complex& complex)const{
-            if(this->number > complex.number ){
-                return true;
-            } else{
-                return false;
-            }
+            return sqrt(pow(this->real, 2) + pow(this->imaginaryNumber, 2)) > sqrt(pow(complex.real, 2) + pow(complex.imaginaryNumber, 2));
         }
 
         friend ostream& operator<<(ostream&, Complex&);
 };
 
 ostream& operator<<(ostream& Operator, Complex& complex){
-            if(complex.number < 0){
-                Operator << complex.real << complex.number << complex.character << endl;
+            if(complex.imaginaryNumber < 0){
+                Operator << complex.real << complex.imaginaryNumber << complex.character << endl;
             } else{
-                Operator << complex.real << "+" << complex.number << complex.character << endl;
+                Operator << complex.real << "+" << complex.imaginaryNumber << complex.character << endl;
             }
             return Operator;
 }
@@ -110,7 +107,7 @@ ostream& operator<<(ostream& Operator, Complex& complex){
 Complex operator*(Complex& complex, int scalar){
     Complex result;
     result.setReal(complex.real*scalar);
-    result.setNumber(complex.number*scalar);
+    result.setNumber(complex.imaginaryNumber*scalar);
     result.setCharacter(complex.character);
     return result;
 }
@@ -119,7 +116,7 @@ Complex operator+(Complex& complex1, Complex& complex2){
         Complex result;
         if( complex1.character == complex2.character ){
             result.setReal(complex1.real + complex2.real);
-            result.setNumber(complex1.number + complex2.number);
+            result.setNumber(complex1.imaginaryNumber + complex2.imaginaryNumber);
             result.setCharacter(complex1.character);
         } else{
             throw "Dissimilar imaginary characters!";
@@ -131,7 +128,7 @@ Complex operator-(Complex& complex1, Complex& complex2){
         Complex result;
         if( complex1.character == complex2.character ){
             result.setReal(complex1.real - complex2.real);
-            result.setNumber(complex1.number - complex2.number);
+            result.setNumber(complex1.imaginaryNumber - complex2.imaginaryNumber);
             result.setCharacter(complex1.character);
         } else{
             throw "Dissimilar imaginary characters!";
@@ -164,7 +161,7 @@ int main(){
         cout << test << endl;
         test = b>a;
         cout << test << endl;
-        test = a>d;
+        test = d>a;
         cout << test << endl;
     } catch(const char* error){
         cout << "Error: " << error << endl;
